@@ -1,0 +1,10 @@
+{
+    "name": "carwler"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+     "soupselect":">=0.2.0"
+     ,"htmlparser":">=1.7.6"
+     ,"iconv":">=1.1.3"
+  }
+}
