@@ -35,12 +35,12 @@ crawler.prototype = Object.create(events.prototype, {
 		value: crawler,
 		enumerable: false
 	},
-    _setPath:function(path){
-        this.hosts.path = path;
-    },
-    _getPath:function(){
-        return this.hosts.path;
-    },
+	_setPath: function(path) {
+		this.hosts.path = path;
+	},
+	_getPath: function() {
+		return this.hosts.path;
+	},
 	open: function(callback) {
 		var request = http.get(this.hosts, function(res) {
 			var buffers = [],
@@ -86,14 +86,14 @@ crawler.prototype = Object.create(events.prototype, {
 			}
 		});
 	},
-    get:function(path){
-        var self = this;
-        if(path && path != self.getPath()){
-            self.setPath(path);    
-        }
-        this.collect(function(){
-            self.emit('end');
-        });    
-    }
+	get: function(path) {
+		var self = this;
+		if (path && path != self.getPath()) {
+			self.setPath(path);
+		}
+		this.collect(function() {
+			self.emit('end');
+		});
+	}
 });
 
