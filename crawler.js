@@ -10,7 +10,7 @@ gb2312_to_utf8_iconv = new Iconv('GBK', 'UTF-8'),
 htmlparser = require('htmlparser'),
 select = require('soupselect').select;
 
-var crawler = function(hosts, size, ToGBK) {
+var crawler = function(hosts, ToGBK) {
 	/*
 	baidu: {
 		host: 'www.baidu.com',
@@ -27,8 +27,6 @@ var crawler = function(hosts, size, ToGBK) {
     */
 	this.hosts = hosts;
 	this.ToGBK = ToGBK;
-	this.size = size || 10;
-	this.len = 0;
 	events.call(this);
 };
 
@@ -37,6 +35,12 @@ crawler.prototype = Object.create(events.prototype, {
 		value: crawler,
 		enumerable: false
 	},
+    _setPath:function(path){
+        this.hosts.path = path;
+    },
+    _getPath:function(){
+        return this.hosts.path;
+    },
 	open: function(callback) {
 		var request = http.get(this.hosts, function(res) {
 			var buffers = [],
@@ -72,7 +76,7 @@ crawler.prototype = Object.create(events.prototype, {
 			if (!err) {
 				var handler = new htmlparser.DefaultHandler(function(err, dom) {
 					if (err) self.emit('error', err);
-					else self.emit('collect', null,dom);
+					else self.emit('collect', null, dom);
 					if (callback) callback(err, dom);
 				});
 				var parser = new htmlparser.Parser(handler);
@@ -82,18 +86,14 @@ crawler.prototype = Object.create(events.prototype, {
 			}
 		});
 	},
-	start: function() {
-		var self = this;
-		for (var i = 0; i < this.size; i++) { (function(i) {
-				this.collect(function() {
-					self.len++;
-					if (i == self.len) {
-						self.emit('end');
-						self.len = 0;
-					}
-				});
-			})(i);
-		}
-	}
+    get:function(path){
+        var self = this;
+        if(path && path != self.getPath()){
+            self.setPath(path);    
+        }
+        this.collect(function(){
+            self.emit('end');
+        });    
+    }
 });
 
