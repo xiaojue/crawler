@@ -38,11 +38,10 @@ crawler.prototype = Object.create(events.prototype, {
 		enumerable: false
 	},
 	open: function(callback) {
-		var pageStr = '',
-		request = http.get(this.hosts, function(res) {
+		var request = http.get(this.hosts, function(res) {
 			var buffers = [],
 			size = 0,
-			pageStr;
+			pageStr = '';
 			res.on('data', function(buffer) {
 				buffers.push(buffer);
 				size += buffer.length;
