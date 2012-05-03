@@ -71,8 +71,8 @@ crawler.prototype = Object.create(events.prototype, {
 		this.open(function(err, str) {
 			if (!err) {
 				var handler = new htmlparser.DefaultHandler(function(err, dom) {
-					if (err) self.emit('collect', err);
-					else self.emit('error', err);
+					if (err) self.emit('error', err);
+					else self.emit('collect', null,dom);
 					if (callback) callback(err, dom);
 				});
 				var parser = new htmlparser.Parser(handler);
