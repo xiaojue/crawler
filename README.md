@@ -37,11 +37,6 @@ test.start();
 ````
 
 #### dependent
-  
   htmlparser
-  
   iconv
-    
   soupselect
-
-
