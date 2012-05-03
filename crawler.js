@@ -88,8 +88,8 @@ crawler.prototype = Object.create(events.prototype, {
 	},
 	get: function(path) {
 		var self = this;
-		if (path && path != self.getPath()) {
-			self.setPath(path);
+		if (path && path != self._getPath()) {
+			self._setPath(path);
 		}
 		this.collect(function() {
 			self.emit('end');
