@@ -2,7 +2,7 @@ var crawler = require('./crawler.js').crawler;
 
 var test = new crawler({
 	host: 'www.baidu.com',
-	path: '/s?wd=',
+	path: '/s?wd=test',
 	port: 80,
 	method: 'get'
 },
@@ -22,11 +22,14 @@ test.on('error', function(e) {
 test.on('end', function(pool) {
 	console.log(pool.length);
 });
-
 for (var i = 0; i < 4; i++) {
 	var pn = i * 10;
 	test.register('/s?wd=test&pn=' + pn);
 }
-
 test.start();
+/*
+test.curl(function(err,str){
+    console.log(str);
+});
+*/
 

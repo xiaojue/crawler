@@ -6,7 +6,7 @@
 var http = require('http'),
 events = require('events').EventEmitter,
 Iconv = require('iconv').Iconv,
-gb2312_to_utf8_iconv = new Iconv('GBK', 'UTF-8'),
+gb2312_to_utf8_iconv = new Iconv('GBK', 'UTF-8//TRANSLIT//IGNORE'),
 htmlparser = require('htmlparser'),
 select = require('soupselect').select;
 
@@ -48,12 +48,14 @@ crawler.prototype = Object.create(events.prototype, {
 			return this.hosts.path;
 		}
 	},
-	open: {
+	curl: {
 		value: function(callback) {
-			var request = http.get(this.hosts, function(res) {
+			var self = this,
+			request = http.get(this.hosts, function(res) {
 				var buffers = [],
 				size = 0,
-				pageStr = '';
+				pageStr = '',
+				utf8_buffer;
 				res.on('data', function(buffer) {
 					buffers.push(buffer);
 					size += buffer.length;
@@ -65,8 +67,8 @@ crawler.prototype = Object.create(events.prototype, {
 						buffers[i].copy(buffer, pos);
 						pos += buffers[i].length;
 					}
-					if (this.ToGBK) {
-						var utf8_buffer = gb2312_to_utf8_iconv.convert(buffer);
+					if (self.ToGBK) {
+						utf8_buffer = gb2312_to_utf8_iconv.convert(buffer);
 						pageStr = utf8_buffer.toString();
 					} else {
 						pageStr = buffers.toString();
@@ -83,7 +85,7 @@ crawler.prototype = Object.create(events.prototype, {
 		value: function(path, callback) {
 			var self = this;
 			this._setPath(path);
-			this.open(function(err, str) {
+			this.curl(function(err, str) {
 				if (!err) {
 					var handler = new htmlparser.DefaultHandler(function(err, dom) {
 						if (err) {
